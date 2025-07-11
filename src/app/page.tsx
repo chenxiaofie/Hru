@@ -1,103 +1,180 @@
-import Image from "next/image";
+"use client";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import {
+  Button,
+  Typography,
+  Box,
+  Alert,
+  Card,
+  CardContent,
+  Avatar,
+  Stack,
+} from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ShieldIcon from "@mui/icons-material/Shield";
+import ThemedSnackbar from "../components/ThemedSnackbar";
 
-export default function Home() {
+export default function HomePage() {
+  const router = useRouter();
+  const [lastVisit, setLastVisit] = useState<Date | null>(null);
+  const [message, setMessage] = useState("");
+  const [hasToken, setHasToken] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  useEffect(() => {
+    setHasToken(!!localStorage.getItem("hru_token"));
+    const last = localStorage.getItem("hru_last_visit");
+    setLastVisit(last ? new Date(last) : null);
+  }, []);
+
+  const handlePunch = async () => {
+    const token = localStorage.getItem("hru_token");
+    if (!token) {
+      setMessage("请先注册或登录");
+      return;
+    }
+    await fetch("/api/visit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ token }),
+    });
+    const now = new Date();
+    localStorage.setItem("hru_last_visit", now.toISOString());
+    setLastVisit(now);
+    setSnackbarOpen(true);
+  };
+
+  const handleSnackbarClose = (
+    _event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") return;
+    setSnackbarOpen(false);
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Box
+      minHeight="100vh"
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      sx={{
+        background: "linear-gradient(135deg, #4FC3F7 0%, #81C784 100%)",
+        transition: "background 0.5s",
+      }}
+      p={2}
+    >
+      <Stack alignItems="center" spacing={2} mb={2}>
+        <Avatar sx={{ bgcolor: "#fff", width: 72, height: 72, boxShadow: 2 }}>
+          <ShieldIcon color="primary" sx={{ fontSize: 48 }} />
+        </Avatar>
+        <Typography
+          variant="h4"
+          fontWeight={700}
+          color="#fff"
+          letterSpacing={2}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          hru 守护健康
+        </Typography>
+        <Typography variant="subtitle1" color="#fff" fontWeight={400}>
+          守护你的健康，每一天 💖
+        </Typography>
+      </Stack>
+      <Card
+        sx={{
+          mb: 4,
+          width: "100%",
+          maxWidth: 400,
+          borderRadius: 4,
+          boxShadow: 4,
+          bgcolor: "rgba(255,255,255,0.95)",
+        }}
+      >
+        <CardContent>
+          {hasToken ? (
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              gap={2}
+            >
+              <Button
+                variant="contained"
+                color="success"
+                size="large"
+                sx={{
+                  width: 120,
+                  height: 120,
+                  borderRadius: "50%",
+                  fontSize: 24,
+                  fontWeight: 700,
+                  boxShadow: 3,
+                  mb: 1,
+                  textTransform: "none",
+                }}
+                startIcon={<FavoriteIcon sx={{ fontSize: 36 }} />}
+                onClick={handlePunch}
+              >
+                打卡
+              </Button>
+              {lastVisit && (
+                <Typography variant="body2" color="text.secondary" mb={1}>
+                  上次打卡：{lastVisit.toLocaleString()}
+                </Typography>
+              )}
+              {message && <Alert severity="info">{message}</Alert>}
+              <Button
+                variant="outlined"
+                color="primary"
+                size="large"
+                sx={{ borderRadius: 3, mt: 2, fontWeight: 600 }}
+                onClick={() => router.push("/settings")}
+                fullWidth
+              >
+                设置/管理紧急联系人
+              </Button>
+            </Box>
+          ) : (
+            <Box display="flex" flexDirection="column" gap={2}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                sx={{ borderRadius: 3, fontWeight: 600 }}
+                onClick={() => router.push("/login")}
+              >
+                登录使用（推荐）
+              </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                size="large"
+                sx={{ borderRadius: 3, fontWeight: 600 }}
+                onClick={() => router.push("/settings")}
+              >
+                免登录使用
+              </Button>
+            </Box>
+          )}
+        </CardContent>
+      </Card>
+      <Typography variant="caption" color="#fff" mt={4}>
+        hru · 健康守护 · {new Date().getFullYear()}
+      </Typography>
+      <Typography variant="caption" color="#fff" mt={1}>
+        作者：Feifei Chen &lt;feifeichen1999@gmail.com&gt;
+      </Typography>
+      <ThemedSnackbar
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+        message={"打卡成功！守护你的健康💖"}
+        autoHideDuration={1800}
+      />
+    </Box>
   );
 }
