@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   let userId;
   try {
     const payload = jwt.verify(token, JWT_SECRET) as {
-      userId: number;
+      userId: string;
       anon?: boolean;
     };
     userId = payload.userId;
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
   }
   // 查找用户和紧急联系人
   const user = await prisma.user.findUnique({
-    where: { id: userId },
+    where: { id: String(userId) },
     include: { contacts: true },
   });
   if (!user || user.contacts.length === 0) {

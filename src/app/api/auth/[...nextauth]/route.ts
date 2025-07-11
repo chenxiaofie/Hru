@@ -8,7 +8,7 @@ import type { JWT } from "next-auth/jwt";
 
 const prisma = new PrismaClient();
 
-export const authOptions = {
+const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     EmailProvider({
@@ -30,7 +30,7 @@ export const authOptions = {
   callbacks: {
     async session({ session, token }: { session: Session; token: JWT }) {
       if (session.user) {
-        (session.user as any).userId = token.sub;
+        (session.user as { userId?: string }).userId = token.sub;
       }
       return session;
     },

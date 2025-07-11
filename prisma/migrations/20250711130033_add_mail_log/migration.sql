@@ -1,9 +1,0 @@
--- CreateTable
-CREATE TABLE "MailLog" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "userId" INTEGER NOT NULL,
-    "contactId" INTEGER NOT NULL,
-    "sentAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "status" TEXT NOT NULL,
-    "error" TEXT
-);

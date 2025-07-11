@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "hru_default_secret";
 
-function getUserIdFromRequest(req: NextRequest): number | null {
+function getUserIdFromRequest(req: NextRequest): string | null {
   const auth = req.headers.get("authorization");
   let token = null;
   if (auth && auth.startsWith("Bearer ")) {
@@ -19,10 +19,11 @@ function getUserIdFromRequest(req: NextRequest): number | null {
   if (!token) return null;
   try {
     const payload = jwt.verify(token, JWT_SECRET) as {
-      userId: number;
+      userId: string | number;
       anon?: boolean;
     };
-    return payload.userId;
+    // 保证返回 string 类型
+    return String(payload.userId);
   } catch {
     return null;
   }
@@ -42,10 +43,10 @@ export async function POST(req: NextRequest) {
   if (data.token) {
     try {
       const payload = jwt.verify(data.token, JWT_SECRET) as {
-        userId: number;
+        userId: string | number;
         anon?: boolean;
       };
-      userId = payload.userId;
+      userId = String(payload.userId);
     } catch {
       return NextResponse.json({ error: "token无效" }, { status: 401 });
     }
@@ -70,21 +71,21 @@ export async function DELETE(req: NextRequest) {
   let userId;
   try {
     const payload = jwt.verify(token, JWT_SECRET) as {
-      userId: number;
+      userId: string | number;
       anon?: boolean;
     };
-    userId = payload.userId;
+    userId = String(payload.userId);
   } catch {
     return NextResponse.json({ error: "token无效" }, { status: 401 });
   }
   // 只允许删除自己的联系人
   const contact = await prisma.contact.findUnique({
-    where: { id: Number(id) },
+    where: { id: String(id) },
   });
   if (!contact || contact.userId !== userId) {
     return NextResponse.json({ error: "无权限" }, { status: 403 });
   }
-  await prisma.contact.delete({ where: { id: Number(id) } });
+  await prisma.contact.delete({ where: { id: String(id) } });
   return NextResponse.json({ ok: true });
 }
 
@@ -96,22 +97,22 @@ export async function PUT(req: NextRequest) {
   let userId;
   try {
     const payload = jwt.verify(token, JWT_SECRET) as {
-      userId: number;
+      userId: string | number;
       anon?: boolean;
     };
-    userId = payload.userId;
+    userId = String(payload.userId);
   } catch {
     return NextResponse.json({ error: "token无效" }, { status: 401 });
   }
   // 只允许修改自己的联系人
   const contact = await prisma.contact.findUnique({
-    where: { id: Number(id) },
+    where: { id: String(id) },
   });
   if (!contact || contact.userId !== userId) {
     return NextResponse.json({ error: "无权限" }, { status: 403 });
   }
   const updated = await prisma.contact.update({
-    where: { id: Number(id) },
+    where: { id: String(id) },
     data: { name, email },
   });
   return NextResponse.json(updated);

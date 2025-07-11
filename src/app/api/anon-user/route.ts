@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     },
   });
   // 生成token
-  const token = jwt.sign({ userId: user.id, anon: true }, JWT_SECRET, {
+  const token = jwt.sign({ userId: String(user.id), anon: true }, JWT_SECRET, {
     expiresIn: "2y",
   });
   return NextResponse.json({ token });

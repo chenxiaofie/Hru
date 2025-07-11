@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   let userId;
   try {
     const payload = jwt.verify(token, JWT_SECRET) as {
-      userId: number;
+      userId: string;
       anon?: boolean;
     };
     userId = payload.userId;
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
   // 记录访问
   await prisma.visitLog.create({
     data: {
-      userId,
+      userId: String(userId),
       date: new Date(),
     },
   });

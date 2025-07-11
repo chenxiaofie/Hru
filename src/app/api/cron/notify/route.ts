@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { sendMail } from "@/lib/email";
 
 const prisma = new PrismaClient();
 
-export async function POST(req: NextRequest) {
+export async function POST() {
   // 清理30天前的日志
   const expire = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
   await prisma.mailLog.deleteMany({ where: { sentAt: { lt: expire } } });
@@ -35,9 +35,9 @@ export async function POST(req: NextRequest) {
           text,
         });
         notified++;
-      } catch (e: any) {
+      } catch (e: unknown) {
         status = "fail";
-        error = e?.message || String(e);
+        error = e instanceof Error ? e.message : String(e);
       }
       await prisma.mailLog.create({
         data: {
