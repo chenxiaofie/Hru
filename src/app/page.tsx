@@ -79,12 +79,39 @@ export default function HomePage() {
           color="#fff"
           letterSpacing={2}
         >
-          hru 守护健康
+          HRU 安心提醒
         </Typography>
         <Typography variant="subtitle1" color="#fff" fontWeight={400}>
-          守护你的健康，每一天 💖
+          每日一按，亲友安心无忧💖
         </Typography>
       </Stack>
+      <Box
+        maxWidth={480}
+        width="100%"
+        bgcolor="rgba(255,255,255,0.92)"
+        borderRadius={4}
+        boxShadow={2}
+        p={3}
+        mb={4}
+        sx={{ textAlign: "left" }}
+      >
+        <Typography variant="body1" fontWeight={600} mb={1} color="primary">
+          HRU
+          是一款守护独居、异地亲友安全的在线报平安工具。只需每日一按，亲友安心无忧。
+        </Typography>
+        <Typography variant="subtitle1" fontWeight={600} mb={1} color="primary">
+          使用方法
+        </Typography>
+        <Typography variant="body2" color="text.secondary" mb={0.5}>
+          1. 每日点击“打卡”按钮，表示你一切安好。
+        </Typography>
+        <Typography variant="body2" color="text.secondary" mb={0.5}>
+          2. 设置紧急联系人邮箱。
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          3. 若连续3天未打卡，系统会自动邮件提醒你的紧急联系人。
+        </Typography>
+      </Box>
       <Card
         sx={{
           mb: 4,
@@ -164,7 +191,7 @@ export default function HomePage() {
         </CardContent>
       </Card>
       <Typography variant="caption" color="#fff" mt={4}>
-        hru · 健康守护 · {new Date().getFullYear()}
+        hru · 安心提醒 · {new Date().getFullYear()}
       </Typography>
       <Typography variant="caption" color="#fff" mt={1}>
         作者：Feifei Chen &lt;feifeichen1999@gmail.com&gt;
@@ -172,7 +199,7 @@ export default function HomePage() {
       <ThemedSnackbar
         open={snackbarOpen}
         onClose={handleSnackbarClose}
-        message={"打卡成功！守护你的健康💖"}
+        message={"打卡成功！亲友安心无忧💖"}
         autoHideDuration={1800}
       />
     </Box>

@@ -279,10 +279,10 @@ export default function SettingsPage() {
           color="#fff"
           letterSpacing={2}
         >
-          hru 紧急联系人设置
+          HRU 紧急联系人设置
         </Typography>
         <Typography variant="subtitle2" color="#fff" fontWeight={400}>
-          守护你的健康，每一天
+          守护亲友安全，每一天
         </Typography>
         {/* 返回首页按钮 */}
         <Button
@@ -570,7 +570,7 @@ export default function SettingsPage() {
         autoHideDuration={1800}
       />
       <Typography variant="caption" color="#fff" mt={4}>
-        hru · 健康守护 · {new Date().getFullYear()}
+        hru · 安心提醒 · {new Date().getFullYear()}
       </Typography>
       <Typography variant="caption" color="#fff" mt={1}>
         作者：Feifei Chen &lt;feifeichen1999@gmail.com&gt;

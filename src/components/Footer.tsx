@@ -13,7 +13,7 @@ export default function Footer() {
       }}
     >
       <Typography variant="caption" color="#4FC3F7" fontWeight={600}>
-        hru · 健康守护 · {new Date().getFullYear()}
+        HRU · 安心提醒 · {new Date().getFullYear()}
       </Typography>
       <br />
       <Typography variant="caption" color="#4FC3F7">
