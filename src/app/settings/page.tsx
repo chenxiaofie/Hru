@@ -88,12 +88,22 @@ export default function SettingsPage() {
         .then((res) => res.json())
         .then((data) => {
           setContacts(data);
+          // 如果有数据，自动填充第一个联系人的 name
+          if (data && data.length > 0) {
+            setName(data[0].name);
+          }
           setFetching(false);
         });
     } else {
       setFetching(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (contacts.length > 0 && !name) {
+      setName(contacts[0].name);
+    }
+  }, [contacts]);
 
   // 合并注册表单逻辑
   const handleRegister = async (e: React.FormEvent) => {
@@ -314,7 +324,8 @@ export default function SettingsPage() {
               </Typography>
               <form onSubmit={handleRegister}>
                 <TextField
-                  label="本人名称"
+                  label="我的称呼（紧急联系人收到提醒时看到的名字）"
+                  placeholder="如：小明、王磊、妈妈"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -350,7 +361,8 @@ export default function SettingsPage() {
               </Typography>
               <form onSubmit={editId ? handleEditSave : addContact}>
                 <TextField
-                  label="姓名"
+                  label="我的称呼（紧急联系人收到提醒时看到的名字）"
+                  placeholder="如：小明、王磊、妈妈"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -358,7 +370,7 @@ export default function SettingsPage() {
                   margin="normal"
                 />
                 <TextField
-                  label="邮箱"
+                  label="紧急联系人邮箱"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

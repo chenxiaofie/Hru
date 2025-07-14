@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function AnonSetupPage() {
@@ -8,6 +8,13 @@ export default function AnonSetupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    const savedName = localStorage.getItem("hru_name");
+    if (savedName && !name) {
+      setName(savedName);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,6 +28,7 @@ export default function AnonSetupPage() {
     const data = await res.json();
     if (res.ok && data.token) {
       localStorage.setItem("hru_token", data.token);
+      localStorage.setItem("hru_name", name); // 注册成功后保存 name
       router.push("/settings");
     } else {
       setError(data.error || "注册失败");
@@ -34,7 +42,7 @@ export default function AnonSetupPage() {
       <form onSubmit={handleSubmit} className="mb-4">
         <input
           className="border p-2 mr-2 rounded w-32"
-          placeholder="本人名称"
+          placeholder="我的称呼（紧急联系人收到提醒时看到的名字，如：小明、王磊、妈妈）"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
