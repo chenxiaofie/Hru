@@ -4,7 +4,16 @@ import { sendMail } from "@/lib/email";
 
 const prisma = new PrismaClient();
 
-export async function POST() {
+export async function POST(req: Request) {
+  // 校验 Vercel Cron Job 的 Authorization
+  if (
+    req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
   // 清理30天前的日志
   const expire = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
   await prisma.mailLog.deleteMany({ where: { sentAt: { lt: expire } } });
