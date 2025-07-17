@@ -14,7 +14,7 @@ export default function AnonSetupPage() {
     if (savedName && !name) {
       setName(savedName);
     }
-  }, []);
+  }, [name]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
