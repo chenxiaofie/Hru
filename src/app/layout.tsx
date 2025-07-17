@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
+const zhMeta: Metadata = {
   title: "HRU - 健康守护打卡提醒应用",
   description:
     "HRU 是一款专注于健康守护的极简打卡提醒应用，支持健康打卡、紧急联系人、智能邮件提醒、免登录体验等功能。无论是独居老人、异地亲人还是关心健康的你，都能通过 HRU 获得贴心的健康守护。HRU，守护你的每一天。",
@@ -65,23 +65,76 @@ export const metadata: Metadata = {
   },
 };
 
-// 在 <head> 里插入结构化数据和 favicon
-// 在组件内 <head> 标签中加入如下内容：
-// <link rel="icon" href="/favicon.ico" />
-// <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-// <meta name="theme-color" content="#4FC3F7" />
-// <script type="application/ld+json">...</script>
+const enMeta: Metadata = {
+  title: "HRU - Health Guardian Check-in App",
+  description:
+    "HRU is a minimalist health guardian check-in app, supporting daily check-ins, emergency contacts, smart email reminders, and guest mode. Whether you live alone, have distant family, or care about health, HRU provides peace of mind every day.",
+  keywords: [
+    "health check-in",
+    "health guardian",
+    "check-in reminder",
+    "emergency contact",
+    "minimalist app",
+    "health safety",
+    "smart reminder",
+    "guest mode",
+    "HRU",
+  ],
+  openGraph: {
+    title: "HRU - Health Guardian Check-in App",
+    description:
+      "HRU is a minimalist health guardian check-in app, supporting daily check-ins, emergency contacts, smart email reminders, and guest mode. HRU, peace of mind every day.",
+    url: "https://www.asdlscjjweq.xyz/",
+    siteName: "HRU Health Guardian",
+    images: [
+      {
+        url: "https://www.asdlscjjweq.xyz/globe.svg",
+        width: 1200,
+        height: 630,
+        alt: "HRU Health Guardian Check-in App",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HRU - Health Guardian Check-in App",
+    description:
+      "HRU is a minimalist health guardian check-in app, supporting daily check-ins, emergency contacts, smart email reminders, and guest mode. HRU, peace of mind every day.",
+    images: ["https://www.asdlscjjweq.xyz/globe.svg"],
+    site: "@hru_health",
+    creator: "@feifeichen1999",
+  },
+  metadataBase: new URL("https://www.asdlscjjweq.xyz/"),
+  alternates: {
+    canonical: "https://www.asdlscjjweq.xyz/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+  },
+};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale?: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return locale === "en" ? enMeta : zhMeta;
+}
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="zh">
       <head>
         {/* 其他 head 内容 */}
-        {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-78W4YDTF2B"
           strategy="afterInteractive"
