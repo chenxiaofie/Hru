@@ -70,6 +70,7 @@ model MailLog {
   id         String   @id @default(cuid())
   userId     String
   contactId  String
+  sentEmail  String
   status     String
   error      String?
   sentAt     DateTime @default(now())

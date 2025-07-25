@@ -46,9 +46,11 @@ export async function GET(req: Request) {
 
       try {
         await sendMail({ to: contact.email, subject, text });
+        // console.log("发送失败吗");
         notified++;
       } catch (e: unknown) {
         status = "fail";
+        // console.log("发送失败吗", e);
         error = e instanceof Error ? e.message : String(e);
       }
 
@@ -58,6 +60,7 @@ export async function GET(req: Request) {
           contactId: contact.id,
           status,
           error,
+          sentEmail: contact.email, // 新增字段，记录发送的邮箱
         },
       });
     }
